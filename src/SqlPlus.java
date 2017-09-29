@@ -1,6 +1,6 @@
 
 /**
- * Main
+ * Main is
  */
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
