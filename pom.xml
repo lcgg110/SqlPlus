@@ -14,34 +14,75 @@
       </resource>
     </resources>
     <plugins>
-      <plugin>
+<!--       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.6.1</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
         </configuration>
-      </plugin>
+      </plugin> -->
       
-      <!-- <plugin>
-		<groupId>com.github.wvengen</groupId>
-		<artifactId>proguard-maven-plugin</artifactId>
-		<executions>
-		   <execution>
-			   <phase>package</phase>
-			   <goals><goal>proguard</goal></goals>
-		   </execution>
-		</executions>
-		<configuration>
-			<options>
-				<option>-allowaccessmodification</option>
-				<option>-keep public class * extends com.chao.tools.db.SqlPlus { *; }</option>
-			</options>
-			<libs>
-				<lib>${java.home}/lib/rt.jar</lib>
-			</libs>
-		</configuration>
-		</plugin> -->
+<!--      <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+	    <artifactId>maven-jar-plugin</artifactId>
+     	<configuration>
+	         <archive>
+	             <manifest>
+	                 <mainClass>com.mysql.MySQL</mainClass>
+	                 <addClasspath>true</addClasspath>
+	                 <classpathPrefix>lib/</classpathPrefix>
+	             </manifest>
+	         </archive>
+	         <classesDirectory>
+	         </classesDirectory>
+	     </configuration>
+	 </plugin> -->
+
+
+<!-- <plugin>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-dependency-plugin</artifactId>
+<executions>
+<execution>
+<id>copy-dependencies</id>
+<phase>compile</phase>
+<goals>
+<goal>copy-dependencies</goal>
+</goals>
+<configuration>
+<excludeScope>provided</excludeScope>
+<outputDirectory>${project.build.outputDirectory}/lib</outputDirectory>
+<overWriteReleases>false</overWriteReleases>
+<overWriteSnapshots>false</overWriteSnapshots>
+<overWriteIfNewer>true</overWriteIfNewer>
+</configuration>
+</execution>
+</executions>
+</plugin> -->
+
+		<plugin>
+			<artifactId> maven-assembly-plugin </artifactId>
+			<configuration>
+				<descriptorRefs>
+					<descriptorRef>jar-with-dependencies</descriptorRef>
+				</descriptorRefs>
+				<archive>
+					<manifest>
+						<mainClass>a</mainClass>
+					</manifest>
+				</archive>
+			</configuration>
+			<executions>
+				<execution>
+					<id>make-assembly</id>
+					<phase>package</phase>
+					<goals>
+					<goal>single</goal>
+					</goals>
+				</execution>
+			</executions>
+		</plugin>
 		
 		<plugin>
 				<groupId>com.github.wvengen</groupId>
@@ -66,7 +107,7 @@
 						<option>-dontoptimize</option> <!--不做 optimize -->
 						<option>-dontskipnonpubliclibraryclasses</option>
 						<option>-dontskipnonpubliclibraryclassmembers</option>
-						<option>-repackageclasses org.noahx.proguard.example.project2.pg</option>
+						<!-- <option>-repackageclasses org.noahx.proguard.example.project2.pg</option> -->
 						<!--平行包结构（重构包层次），所有混淆的类放在 pg 包下-->
 						<!-- 以下为 Keep，哪些内容保持不变，因为有一些内容混淆后（a,b,c）导致反射或按类名字符串相关的操作失效 -->
 						<option>-keep class **.package-info</option>
@@ -83,16 +124,25 @@
 						<option>-keep class org.noahx.proguard.example.project2.Project2 { public void init(); public void
 							destroy(); }
 						</option>
+						<option>-keep class MySql { *; }
+						</option>
+						<!-- 保持main方法 -->
+						<option>-keepclassmembers class SqlPlus { public static void main(java.lang.String[]); }
+						</option>
 						<!-- 保持对外的接口性质类对外的类名与方法名不变 -->
 					</options>
+					 <!--指定混淆的jar包，我这里是将上一步输出的jar包进行混淆-->
+             		<injar>SqlPlus-0.0.1-SNAPSHOT-jar-with-dependencies.jar</injar>
+             		<!--指定输出的jar包名-->
 					<outjar>${project.build.finalName}-pg</outjar>
+					<obfuscate>true</obfuscate>
+					<!-- 添加依赖，必须添加，不然会报一些莫名错误-->
 					<libs>
 						<lib>${java.home}/lib/rt.jar</lib>
+						<lib>${java.home}/lib/jce.jar</lib>
 					</libs>
 				</configuration>
 			</plugin>
-		
-		
 		
     </plugins>
   </build>
