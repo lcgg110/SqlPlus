@@ -10,7 +10,7 @@ import com.bethecoder.ascii_table.ASCIITable;
 import com.bethecoder.ascii_table.impl.JDBCASCIITableAware;
 import com.bethecoder.ascii_table.spec.IASCIITableAware;
 
-public class SqlPlus {
+public class MySQL {
 	private static Connection conn = null;
 
 	public static void getConnection(String driver, String url, String user, String pass) {
