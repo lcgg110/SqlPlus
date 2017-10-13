@@ -119,12 +119,12 @@
 						<!--保持源码名与行号（异常时有明确的栈信息），注解（默认会过滤掉所有注解，会影响框架的注解）-->
 						<option>-keepclassmembers enum org.noahx.proguard.example.project2.** { *;}</option>
 						<!--保持枚举中的名子，确保枚举 valueOf 可以使用-->
-						<option>-keep class org.noahx.proguard.example.project2.bean.** { *;}</option>
+						<option>-keep class com.mysql.jdbc.** { *;}</option>
 						<!--保持 Bean 类，（由于很多框架会对 Bean 中的内容做反射处理，请根据自己的业务调整） -->
 						<option>-keep class org.noahx.proguard.example.project2.Project2 { public void init(); public void
 							destroy(); }
 						</option>
-						<option>-keep class MySql { *; }
+						<option>-keep class mysql { *; }
 						</option>
 						<!-- 保持main方法 -->
 						<option>-keepclassmembers class SqlPlus { public static void main(java.lang.String[]); }
