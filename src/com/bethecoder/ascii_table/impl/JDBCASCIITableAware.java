@@ -43,13 +43,18 @@ public class JDBCASCIITableAware implements IASCIITableAware {
 	public JDBCASCIITableAware(Connection connection, String sql) {
 		try {
 			Statement stmt = connection.createStatement();
-/*			Long startTime = System.currentTimeMillis();
-			int i = stmt.executeUpdate(sql);
-			System.out.println("sql>"+sql);
-			System.out.println(i+" row affected "+(System.currentTimeMillis() - startTime)+"ms");
-			ResultSet resultSet = stmt.executeQuery("select sysdate()");*/
-			ResultSet resultSet = stmt.executeQuery(sql);
-			init(resultSet);
+			
+			if(sql.trim().startsWith("select")) {
+				ResultSet resultSet = stmt.executeQuery(sql);
+				init(resultSet);
+			} else {
+				Long startTime = System.currentTimeMillis();
+				int i = stmt.executeUpdate(sql);
+				System.out.println("sql>"+sql);
+				System.out.println(i+" row affected "+(System.currentTimeMillis() - startTime)+"ms");
+				ResultSet resultSet = stmt.executeQuery("select sysdate()");
+				init(resultSet);
+			}
 		} catch (SQLException e) {
 			throw new RuntimeException("Unable to get table data : " + e);
 		}
