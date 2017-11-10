@@ -6,6 +6,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import com.bethecoder.ascii_table.ASCIITable;
 import com.bethecoder.ascii_table.impl.JDBCASCIITableAware;
 import com.bethecoder.ascii_table.spec.IASCIITableAware;
@@ -30,7 +33,7 @@ public class SqlPlus {
 					if( asciiTableAware.getData()!= null && !asciiTableAware.getData().isEmpty() ) {
 						ASCIITable.getInstance().printTable(asciiTableAware);
 					}else if( asciiTableAware.getHeaders() !=null && !asciiTableAware.getHeaders().isEmpty()){
-						System.out.println(" No ResultSet was Selected ");
+						System.out.println("["+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"] "+" No ResultSet was Selected ");
 					}
 				} catch (Exception e) {
 					System.out.println(e.toString());
