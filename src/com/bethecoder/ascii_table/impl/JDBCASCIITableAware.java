@@ -21,7 +21,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.bethecoder.ascii_table.ASCIITableHeader;
@@ -42,19 +44,49 @@ public class JDBCASCIITableAware implements IASCIITableAware {
 	
 	public JDBCASCIITableAware(Connection connection, String sql) {
 		try {
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
 			Statement stmt = connection.createStatement();
 			
-			if(sql.trim().startsWith("select")) {
+			Long startTime = System.currentTimeMillis();
+			stmt.execute(sql);
+			while(true) {
+				int rowCount = stmt.getUpdateCount(); 
+				if (rowCount > 0) { // 它是更新计数 
+					System.out.println("["+df.format(new Date())+"]  "+rowCount+"  Rows affected "+(System.currentTimeMillis() - startTime)+"ms"); 
+					stmt.getMoreResults(); 
+					continue; 
+				} 
+				if (rowCount == 0) { // DDL 命令或 0 个更新 
+					System.out.println("["+df.format(new Date())+"] "+" No rows changed or statement was DDL command "+(System.currentTimeMillis() - startTime)+"ms"); 
+					stmt.getMoreResults(); 
+					continue; 
+				} 
+				// 执行到这里，证明有一个结果集 
+				// 或没有其它结果 
+				ResultSet resultSet = stmt.getResultSet();
+				if (resultSet != null) {// 使用元数据获得关于结果集列的信息 
+					init(resultSet);// 处理结果 
+					stmt.getMoreResults(); 
+					continue; 
+				} 
+				break; // 没有其它结果 
+			}
+			
+/*			if(sql.trim().substring(0,6).toLowerCase().startsWith("select")) {
 				ResultSet resultSet = stmt.executeQuery(sql);
 				init(resultSet);
 			} else {
 				Long startTime = System.currentTimeMillis();
 				int i = stmt.executeUpdate(sql);
-				System.out.println("sql>"+sql);
-				System.out.println(i+" row affected "+(System.currentTimeMillis() - startTime)+"ms");
-				ResultSet resultSet = stmt.executeQuery("select sysdate()");
-				init(resultSet);
-			}
+				//System.out.println("sql>"+sql);
+				if( i > 0 ) {
+					System.out.println("["+df.format(new Date())+"] "+i+" rows affected "+(System.currentTimeMillis() - startTime)+"ms");
+				} else {
+					System.out.println(" No rows changed or statement was DDL command "+(System.currentTimeMillis() - startTime)+"ms");
+				}
+//				ResultSet resultSet = stmt.executeQuery("select sysdate()");
+//				init(resultSet);
+			}*/
 		} catch (SQLException e) {
 			throw new RuntimeException("Unable to get table data : " + e);
 		}

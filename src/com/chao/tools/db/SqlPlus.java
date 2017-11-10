@@ -53,7 +53,7 @@ public class SqlPlus {
 				String driver = new BufferedReader(new InputStreamReader(System.in)).readLine();
 				System.out.print("URL:");
 				String url = new BufferedReader(new InputStreamReader(System.in)).readLine();
-				System.out.print("username:");
+				System.out.print("user:");
 				String user = new BufferedReader(new InputStreamReader(System.in)).readLine();
 				System.out.print("password:");
 				String passwd = new BufferedReader(new InputStreamReader(System.in)).readLine();

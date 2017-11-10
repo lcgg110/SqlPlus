@@ -27,7 +27,11 @@ public class SqlPlus {
 			if (!sql.isEmpty()) {
 				try {
 					IASCIITableAware asciiTableAware = new JDBCASCIITableAware(conn, sql);
-					ASCIITable.getInstance().printTable(asciiTableAware);
+					if( asciiTableAware.getData()!= null && !asciiTableAware.getData().isEmpty() ) {
+						ASCIITable.getInstance().printTable(asciiTableAware);
+					}else if( asciiTableAware.getHeaders() !=null && !asciiTableAware.getHeaders().isEmpty()){
+						System.out.println(" No ResultSet was Selected ");
+					}
 				} catch (Exception e) {
 					System.out.println(e.toString());
 				}
@@ -55,7 +59,7 @@ public class SqlPlus {
 				String driver = new BufferedReader(new InputStreamReader(System.in)).readLine();
 				System.out.print("URL:");
 				String url = new BufferedReader(new InputStreamReader(System.in)).readLine();
-				System.out.print("username:");
+				System.out.print("user:");
 				String user = new BufferedReader(new InputStreamReader(System.in)).readLine();
 				System.out.print("password:");
 				String passwd = new BufferedReader(new InputStreamReader(System.in)).readLine();
