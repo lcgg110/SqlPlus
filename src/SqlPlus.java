@@ -40,7 +40,35 @@ public class SqlPlus {
 				}
 			}
 			System.out.print(conn.getMetaData().getDatabaseProductName() + "> ");
-			String str = new BufferedReader(new InputStreamReader(System.in)).readLine();
+			
+					
+			/*InputStreamReader rd = new InputStreamReader(System.in);
+			String str = null ;
+			int ch = 0;
+			StringBuffer temp = new StringBuffer();
+			while((ch = rd.read())!= -1){
+				System.out.println("ch="+ch);
+				 
+			       temp.append((char)ch);
+			       if(ch ==59 ) {
+					   break;
+				   }
+			}
+			str = temp.toString();*/
+			
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			String str = "" ;
+			String line = "" ;
+			while( (line = br.readLine()) !=null ) {
+				if( "".equals(line) ){
+					break;
+				}
+				str += line;
+			}
+			//System.out.println("str="+str);
+			
+			
+			//最原始 String str = new BufferedReader(new InputStreamReader(System.in)).readLine();
 			if (!"exit".equalsIgnoreCase(str)) {
 				executeSQL(str);
 			} else {
